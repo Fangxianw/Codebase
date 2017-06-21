@@ -215,3 +215,7 @@ ModelManifest.xml
 *.DS_Store
 *.bin
 *.out
+
+# Windows system file can be ignored byFangxianx
+*.db
+*.opendb
