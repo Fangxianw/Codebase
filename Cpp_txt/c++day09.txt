@@ -1,0 +1,39 @@
+c++ 的IO
+一.c++ 提供的标准对象
+    cout
+    clog
+    cerr
+    cin  
+    
+    (system)
+
+二 IO类的层次图
+    cin   cout  ------------------ #include <iostream>
+    istringstream   ---------      #include <sstream>       
+    ostringstream     
+   
+    ifstream  ofstream  ------  #include <fstream>
+           fstream  
+三 .格式化输入输出
+    int  age;
+    string name;
+    double salary;
+    cin >> age;
+    cout << age << endl;
+    c++ 中格式化输入输出 是自动控制的  
+    自动忽略 空格 
+
+四. 非格式化IO 
+     int get()   
+     istream&  get(char& c)
+     ostream& put(char  c)
+
+     istream& getline( char* buffer, streamsize num );
+     istream& getline( char* buffer, streamsize num,
+          char delim );
+
+
+
+
+
+ 

@@ -1,0 +1,150 @@
+﻿一、双端队列(deque)
+1.除了capacity()和reserve()以外向量的接口双端队列都有。
+2.双端队列增加了在头部压入和弹出的接口：
+  push_front/pop_front
+3.虽然双端队列的物理结构也是连续的内存空间，但是它在其内存空间的首尾两端都保持了适度的开放性。因此在距离首尾两端等距的位置做insert和erase，性能是一致的。
+4.和向量一样也支持通过下标和随机迭代器访问容器中的元素。
+5.所占用内存空间比向量略多一些。动态内存管理所花费的时间也比向量略多一些。
+注意：对容器所做的结构性的改变(push_back/push_front/pop_back/pop_front/insert/erase/resize/clear)会导致原先初始化的迭代器不再指向先前的元素，如果需要保证迭代器和其目标的相对位置不变，需要人为地同步。
+二、列表(list)
+1.列表按照链式线性表的形式存储数据。每个数据元素存放在内存不连续的节点之中。
+2.不支持下标运算符，也不支持随机迭代。
+3.大部分成员函数和双端队列一样。
+front/push_front/pop_front
+back/push_back/pop_back
+insert/erase - O(1)
+size/resize/clear/empty
+begin/end/rbegin/rend
+4.特有的成员函数
+remove - 删除所有匹配的元素
+unique - 对连续重复的元素做唯一化
+10 20 20 20 30 10 20 20 40
+             | unique
+             V
+10    20    30 10   20  40
+splice - 将参数列表的全部或一部分插入到调用列表中
+void splice (iterator pos, list& lst);
+将lst全部剪切到调用列表的pos之前。
+void splice (iterator pos, list& lst,
+  iterator del);
+将lst中del所指向的元素剪切到调用列表的pos之前
+void splice (iterator pos, list& lst,
+  iterator begin, iterator end);
+将lst中从begin开始到end为止的元素剪切到调用列表的pos之前
+merge - 将有序的参数列表合并到有序的调用列表中，并保证合并以后的结果依然有序
+void merge (list& lst);
+void merge (list& lst, less cmp);
+10 40 60 80 90
+            ^
+20 50 70 80
+            ^
+10 20 40 50 60 70 80 80 90
+sort - 排序，全局sort不能对列表排序。
+sort (void);
+sort (less cmp);
+三、堆栈(stack)
+push  -> push_back
+pop   -> pop_back
+top   -> back
+size  -> size 
+empty -> empty
+三种线性容器中的任何一种都可以适配堆栈。
+缺省底层容器是deque。
+stack<元素类型, 底层容器类型> st;
+stack<元素类型> st; // 用deque做底层容器
+四、队列(queue)
+push  - push_back
+pop   - pop_front !!!
+back  - back
+front - front
+size  - size
+empty - empty
+三种线性容器中只有deque和list可以适配队列，vector不能适配。
+缺省底层容器是deque。
+queue<元素类型, 底层容器类型> qu;
+queue<元素类型> qu; // 用deque做底层容器
+vector<int> vi;
+vector<int, allocator> vi;
+五、优先队列(priority_queue)
+1.每向优先队列压入一个元素，队列内部都会为该元素确定一个合适的位置，保证优先级高的元素排在优先级低的元素的前边。
+2.优先级的判断标准有两个：一个是根据元素类型的“<”运算符，以大者为优。另一个是根据比较器的返回值判断。
+priority_queue<string> ps;
+元素类型是string，底层容器是deque，比较规则用“<”。
+priority_queue<int, vector<int>,CmpInt> pi;
+元素类型是int，底层容器是vector，比较规则用CmpInt比较器。
+priority_queue<int,deque<int>,CmpInt> pi;
+三种线性容器中只有vector和deque可以作为优先队列的底层容器，缺省底层容器是deque。
+六、映射(map)
+1.映射是一个key-value对(pair)的序列。
+pair中只有两个成员变量，一个名为first表示key，另一个名为second表示value。
+其中每个key都是唯一的。
+2.映射内部用一个平衡有序二叉树(红黑树RBT)的结构存放key-value对。确定有序性时，以key为基准。针对key的比较，要么根据“<”处理，要么根据比较器处理。
+map<string, int> si;
+key是string类型，value是int类型，用“<”确定key的大小。
+map<int, double, CmpInt> id;
+key是int类型，value是double类型，用CmpInt比较器确定key的大小。
+3.映射主要用于在存在一一对应的关系中进行高效的搜索。
+4.支持以key为参数的下标运算(O(logN))。
+map<string, int> si;
+si["张飞"] = 28;
+若给定的key不存在，则新建一个key-value对，同时返回新建对中value的引用。若给定的key已存在，直接返回已存在key所对应的value的引用。
+5.常用成员函数
+1)插入元素
+pair<iterator, bool> insert (
+  pair<key_type,value_type> const& pair);
+在调用映射中插入一个元素，同时返回结果res。
+如果res.second是true，那么res.first指向新插入的节点。如果res.second是false，那么表示插入失败，res.first没有意义。
+2)删除元素
+void erase (iterator pos);
+void erase (iterator begin, iterator end);
+size_type erase (key_type const& key);
+3)查找匹配元素
+iterator find (key_type const& key);
+成功返回指向与key匹配的元素的迭代器，失败返回容器的终止迭代器。
+七、多重映射(multimap)
+key可以重复的映射，表示一对多的关系，不支持下标运算符。
+iterator lower_bound (key_type const& key);
+获取匹配下限
+iterator upper_bound (key_type const& key);
+获取匹配上限
+pair<iterator, iterator> equal_range (
+  key_type const& key);
+获取匹配范围
+multimap<string, int> si;
+KEY    VALUE
+张飞 - 10000
+赵云 - 15000
+张飞 - 20000
+关羽 - 25000
+赵云 - 30000
+关羽 - 35000
+|
+V 迭代
+关羽 - 25000
+关羽 - 35000
+张飞 - 10000 <- lower_bound ("张飞") -+
+张飞 - 20000                          |
+赵云 - 15000 <- upper_bound ("张飞") -+
+赵云 - 30000                          |
+                equal_range ("张飞") <+
+八、集合(set)
+没有value的映射。
+问题：输出任意两个字符串中共有的字符，每个字符只允许输出一次。
+alkjglahala -set-> alkjgh    --+
+oigaydjifau -set-> oigaydjfu <-+
+agj
+九、多重集合(mutiset)
+没有value的多重映射。
+iterator lower_bound (key_type const& key);
+获取匹配下限
+iterator upper_bound (key_type const& key);
+获取匹配上限
+pair<iterator, iterator> equal_range (
+  key_type const& key);
+获取匹配范围
+
+
+
+
+
+

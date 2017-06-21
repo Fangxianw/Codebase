@@ -1,0 +1,109 @@
+一.const 对象  和  const 函数
+    const对象就是 在对象类型上 加了const 修饰
+          const  Date     date;
+    const 函数是针对成员函数的   可以在成员函数上 加const修饰
+           class  A{
+                 public:
+                 void     show()const{  
+                 }
+                 void     show(){  
+                 }
+           };
+   const  函数 和 非 const 函数 可以形成重载关系。
+   非const对象  优先调用非const函数  没有非const函数 则选择
+      const函数。
+   const 对象 只能调用const 函数 。
+
+   const函数 不能对成员变量进行修改  也不能调用 非const函数。
+   非const 函数 可以 调用 const 函数。
+   如果非要在 const 函数中 修改成员变量 可以使用 mutable。
+
+
+二. 拷贝构造函数
+    2.1 /* 如果不提供 拷贝构造函数 则系统会提供一个默认的拷贝构造函数。目的是复制对象。*/ 
+    类型名(const 类型名& par){  
+   
+    }    
+   2.2  拷贝构造函数的调用时机
+    使用同类型的对象 创建另外一个对象时 。
+          A    a;
+          A    b=a;   
+          如果自己提供拷贝构造函数 则需要自己完成数据的复制。
+    对象 作为函数参数的值传递时。 
+    把对象 作为函数的返回值时。      
+
+   2.3 为什么要自定义拷贝构造函数
+        要自己处理对象数据复制的过程 
+        当需要对象和对象之间 都有自己独立的内存时 (有指针 或者引用类型成员时)
+
+  三.静态成员 
+      3.1 静态成员变量 
+      class  Person{
+            string name; 
+            int  age;
+            static int  pcount;
+      }; 
+      对象级别的 数据
+      静态数据 属于 整个类型的数据  数据只有一份
+      静态成员 类似于全局变量  受类型作用域限制 和 权限限制。
+      静态成员变量 必须在类外进行初始化 。
+
+     3.2 静态成员函数
+     属于整个类型的函数  不使用对象 就可以直接调用的函数。
+     静态成员函数 没有this指针。 静态成员函数 不能直接访问
+     非静态成员。
+
+     3.3   写一个单例模式
+     在一个进程中 这个类型对象 只有一份。
+     权限控制   静态    引用  构造  拷贝构造 
+
+四.成员指针
+    4.1 成员变量指针
+         4.1.1 指向成员变量的指针。
+         4.1.2 语法
+         struct  Date{
+                int  year;
+                int  month;
+                int  day;
+         };
+         /* 定义 */  
+         int   Date::*pmer;
+         /* 赋值 */ 
+         pmer=&Date::month;
+         /* 调用 */
+         Date  date={2014,6,7};
+         date.*pmer;
+         Date  *date2 = new Date();
+         date2->*perm;
+         4.1.3  成员变量指针的本质
+         成员变量指针 就是记录在对象中的地址偏移量
+         
+     4.2  成员函数指针 
+         4.2.1 指向成员函数的指针
+         4.2.2 语法
+         struct  Date{
+                int  year;
+                int  month;
+                int  day;
+                int   getYear(){
+                       return  year;
+                }
+                int   getMonth(){
+                       return  month;
+                }
+         };
+
+         int   (Date::*pgetm)(); 
+         pgetm=&Date::getMonth; 
+         /* 解引用 */
+         Date    date;
+         (date.*pgetm)();
+         Date   *date2 =new Date();
+         (date->*pgetm)();   
+
+
+
+
+
+
+
